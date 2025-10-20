@@ -2,8 +2,10 @@ using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 {
-    [SerializeField] private float speed = 1f;
     [SerializeField] private CharacterController controller;
+    [SerializeField] private Camera cam;    
+
+    [SerializeField] private float speed = 1f;
 
     void Update()
     {
@@ -15,8 +17,9 @@ public class PlayerController : MonoBehaviour
         float x = Input.GetAxisRaw("Horizontal");
         float z = Input.GetAxisRaw("Vertical");
 
-        Vector3 movement = new Vector3(x, 0, z).normalized;
+        Vector3 movement = cam.transform.right * x + cam.transform.forward * z;
+        movement.y = 0;
 
-        controller.Move(movement * speed * Time.deltaTime);
+        controller.Move(movement.normalized * speed * Time.deltaTime);
     }
 }
