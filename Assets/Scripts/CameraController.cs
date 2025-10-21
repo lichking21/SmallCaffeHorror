@@ -2,6 +2,7 @@ using UnityEngine;
 
 public class CameraController : MonoBehaviour
 {
+    [SerializeField] Transform player;
     [SerializeField] private float sensivity = 100f;
     private float xRot;
     private float yRot;
@@ -26,6 +27,8 @@ public class CameraController : MonoBehaviour
         yRot += mouseX;
         xRot = Mathf.Clamp(xRot, -90f, 90f);
 
-        transform.rotation = Quaternion.Euler(xRot, yRot, 0f);
+        transform.localRotation = Quaternion.Euler(xRot, yRot, 0f);
+
+        player.Rotate(Vector3.up * mouseX);
     }
 }
