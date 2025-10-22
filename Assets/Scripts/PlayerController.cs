@@ -1,4 +1,3 @@
-using Unity.VisualScripting;
 using UnityEngine;
 
 public class PlayerController : MonoBehaviour
@@ -6,7 +5,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private CharacterController controller;
     [SerializeField] private Camera cam;
     [SerializeField] private float speed = 1f;
-    private float rayLength = 5f;
+    private float rayLength = 10f;
 
     [SerializeField] private Transform holdPoint;
     [SerializeField] private string cupName;
@@ -48,6 +47,15 @@ public class PlayerController : MonoBehaviour
             {
                 pickUpObj = hit.collider.gameObject;
 
+                if (pickUpObj.name == cupName)
+                {
+                    if (machineController != null && machineController.isPouring)
+                    {
+                        Debug.Log("Coffee is pouring");
+                        return;
+                    }
+                }
+
                 pickUpObj.transform.SetParent(holdPoint);
                 pickUpObj.transform.localPosition = Vector3.zero;
                 pickUpObj.transform.localRotation = Quaternion.Euler(0, 0, 0);
@@ -61,8 +69,14 @@ public class PlayerController : MonoBehaviour
     {
         pickUpObj.transform.SetParent(null);
 
+        //pickUpObj.transform.position += Vector3.up * 0.05f;
+
         var rb = pickUpObj.GetComponent<Rigidbody>();
-        if (rb != null) rb.isKinematic = false;
+        if (rb != null)
+        {
+            rb.isKinematic = false;
+            rb.collisionDetectionMode = CollisionDetectionMode.Continuous;
+        }
 
         pickUpObj = null;
     }
