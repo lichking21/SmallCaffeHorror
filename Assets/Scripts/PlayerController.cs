@@ -34,7 +34,7 @@ public class PlayerController : MonoBehaviour
         float z = Input.GetAxisRaw("Vertical");
 
         Vector3 movement = cam.transform.right * x + cam.transform.forward * z;
-        movement.y = 0;
+        movement.y = Time.deltaTime * -10;
 
         controller.Move(movement.normalized * speed * Time.deltaTime);
     }
