@@ -1,3 +1,4 @@
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class PlayerController : MonoBehaviour
@@ -5,11 +6,14 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private CharacterController controller;
     [SerializeField] private Camera cam;
     [SerializeField] private float speed = 1f;
+    private float rayLength = 5f;
 
     [SerializeField] private Transform holdPoint;
+    [SerializeField] private string cupName;
+    [SerializeField] private string capName;
     private GameObject pickUpObj;
-    private float rayLength = 3f;
 
+    private CoffeMachineController machineController;
 
     void Update()
     {
@@ -20,6 +24,9 @@ public class PlayerController : MonoBehaviour
             if (pickUpObj == null) TakeObj();
             else DropObj();
         }
+
+        TurnOnMachine();
+        PlaceCap();
     }
 
     private void Move()
@@ -58,5 +65,53 @@ public class PlayerController : MonoBehaviour
         if (rb != null) rb.isKinematic = false;
 
         pickUpObj = null;
+    }
+
+    private void TurnOnMachine()
+    {
+        if (pickUpObj == null) return;
+
+        if (Input.GetKeyDown(KeyCode.F))
+        {
+            if (Physics.Raycast(cam.transform.position, cam.transform.forward, out RaycastHit hit, rayLength))
+            {
+                machineController = hit.collider.gameObject.GetComponent<CoffeMachineController>();
+
+                if (machineController != null)
+                {
+                    if (pickUpObj.name == cupName)
+                    {
+                        machineController.TrunOn();
+                        machineController.PlaceCup(pickUpObj);
+
+                        pickUpObj = null;
+                    }
+                }
+            }
+        }
+    }
+    
+    private void PlaceCap()
+    {
+        if (pickUpObj == null) return;
+
+        if (Input.GetKeyDown(KeyCode.F))
+        {
+            if (Physics.Raycast(cam.transform.position, cam.transform.forward, out RaycastHit hit, rayLength))
+            {
+                Debug.Log("Raycast at object: " + hit.collider.gameObject.name);
+                var cupController = hit.collider.gameObject.GetComponent<CoffeeCupController>();
+
+                if (cupController != null)
+                {
+                    if (pickUpObj.name == capName)
+                    {
+                        cupController.PlaceCap(pickUpObj);
+
+                        pickUpObj = null;
+                    }
+                }
+            }
+        }
     }
 }
