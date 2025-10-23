@@ -6,6 +6,7 @@ TagManager:
   tags:
   - PickUpObj
   - CoffeeMachine
+  - NPC
   layers:
   - Default
   - TransparentFX

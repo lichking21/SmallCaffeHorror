@@ -5,12 +5,13 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private CharacterController controller;
     [SerializeField] private Camera cam;
     [SerializeField] private float speed = 1f;
-    private float rayLength = 10f;
+    private float rayLength = 15f;
 
     [SerializeField] private Transform holdPoint;
     [SerializeField] private string cupName;
     [SerializeField] private string capName;
     private GameObject pickUpObj;
+    private bool isFull;
 
     private CoffeMachineController machineController;
 
@@ -21,11 +22,12 @@ public class PlayerController : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.E))
         {
             if (pickUpObj == null) TakeObj();
-            else DropObj();
+            //else DropObj();
         }
 
         TurnOnMachine();
         PlaceCap();
+        GiveCoffee();
     }
 
     private void Move()
@@ -104,7 +106,7 @@ public class PlayerController : MonoBehaviour
             }
         }
     }
-    
+
     private void PlaceCap()
     {
         if (pickUpObj == null) return;
@@ -113,7 +115,6 @@ public class PlayerController : MonoBehaviour
         {
             if (Physics.Raycast(cam.transform.position, cam.transform.forward, out RaycastHit hit, rayLength))
             {
-                Debug.Log("Raycast at object: " + hit.collider.gameObject.name);
                 var cupController = hit.collider.gameObject.GetComponent<CoffeeCupController>();
 
                 if (cupController != null)
@@ -123,8 +124,31 @@ public class PlayerController : MonoBehaviour
                         cupController.PlaceCap(pickUpObj);
 
                         pickUpObj = null;
+
+                        isFull = true;
                     }
                 }
+            }
+        }
+    }
+
+    private void GiveCoffee()
+    {
+        if (Input.GetKeyDown(KeyCode.F))
+        {
+            if (Physics.Raycast(cam.transform.position, cam.transform.forward, out RaycastHit hit, rayLength))
+            {
+                if (hit.collider.CompareTag("NPC") && pickUpObj.name == cupName && isFull)
+                {
+                    var npc = hit.collider.GetComponentInParent<NPCController>();
+
+                    npc.TakeCoffee(true);
+                    isFull = false;
+                    Debug.Log("Hit:" + hit.collider.gameObject.name);
+
+                    Destroy(pickUpObj);
+                }
+                else Debug.Log("Can't find NPC");
             }
         }
     }

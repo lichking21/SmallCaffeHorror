@@ -1166,6 +1166,37 @@ CapsuleCollider:
   m_Height: 0.21995531
   m_Direction: 1
   m_Center: {x: 0.00063521886, y: -0.04360317, z: -0.000000016022865}
+--- !u!1 &676671372
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 676671373}
+  m_Layer: 0
+  m_Name: DestinationPoint (1)
+  m_TagString: Untagged
+  m_Icon: {fileID: 1206586993520771344, guid: 0000000000000000d000000000000000, type: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &676671373
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 676671372}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -3, y: 0.32, z: -14}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 944336239}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &692317096 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 4054534150062460052, guid: 6ab195cdff74bd9429f122328582eb37, type: 3}
@@ -1398,7 +1429,7 @@ GameObject:
   - component: {fileID: 944336238}
   m_Layer: 0
   m_Name: NPCController
-  m_TagString: Untagged
+  m_TagString: NPC
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1415,7 +1446,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4762bca2b27c65b429ec5f579cd9b090, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  destinationPoint: {fileID: 473576597}
+  barDestinationPoint: {fileID: 473576597}
+  streetDestinationPoint: {fileID: 676671373}
   agent: {fileID: 985711099}
   anim: {fileID: 985711100}
 --- !u!4 &944336239
@@ -1433,6 +1465,7 @@ Transform:
   m_Children:
   - {fileID: 985711098}
   - {fileID: 473576597}
+  - {fileID: 676671373}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &985711097 stripped
@@ -1489,6 +1522,29 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!136 &985711101
+CapsuleCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 985711097}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Radius: 0.3
+  m_Height: 1.8
+  m_Direction: 1
+  m_Center: {x: 0, y: 1, z: 0}
 --- !u!1 &997031982 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: -3386553121241536846, guid: 6ab195cdff74bd9429f122328582eb37, type: 3}
@@ -2112,6 +2168,10 @@ PrefabInstance:
       propertyPath: m_IsActive
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: f29e2144996bcb4479384657559c76fc, type: 3}
+      propertyPath: m_TagString
+      value: NPC
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -2122,6 +2182,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: f29e2144996bcb4479384657559c76fc, type: 3}
       insertIndex: -1
       addedObject: {fileID: 985711100}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: f29e2144996bcb4479384657559c76fc, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 985711101}
   m_SourcePrefab: {fileID: 100100000, guid: f29e2144996bcb4479384657559c76fc, type: 3}
 --- !u!1 &1639561906
 GameObject:
@@ -2355,7 +2418,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: 1eaee5b237a72ca41b87793b99bf3f2e, type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
