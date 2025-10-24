@@ -3,8 +3,15 @@ using UnityEngine;
 public class PlayerController : MonoBehaviour
 {
     [SerializeField] private CharacterController controller;
+    [SerializeField] private float walkSpeed = 3.5f;
+    [SerializeField] private float runSpeed = 5.5f;
+    private float currSpeed;
+
+    [SerializeField] private AudioSource hearbeatSound;
+    private EnemyController enemy;
+
     [SerializeField] private Camera cam;
-    [SerializeField] private float speed = 1f;
+    [SerializeField] private Animator cameraAnim;
     private float rayLength = 15f;
 
     [SerializeField] private Transform holdPoint;
@@ -15,6 +22,11 @@ public class PlayerController : MonoBehaviour
 
     private CoffeMachineController machineController;
 
+    void Start()
+    {
+        enemy = GameObject.FindGameObjectWithTag("Enemy").GetComponent<EnemyController>();
+    }
+
     void Update()
     {
         Move();
@@ -22,7 +34,7 @@ public class PlayerController : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.E))
         {
             if (pickUpObj == null) TakeObj();
-            //else DropObj();
+            else DropObj();
         }
 
         TurnOnMachine();
@@ -38,7 +50,21 @@ public class PlayerController : MonoBehaviour
         Vector3 movement = cam.transform.right * x + cam.transform.forward * z;
         movement.y = Time.deltaTime * -10;
 
-        controller.Move(movement.normalized * speed * Time.deltaTime);
+        if (Input.GetKey(KeyCode.LeftShift))
+        {
+            currSpeed = runSpeed;
+            cameraAnim.SetBool("Sprint", true);
+
+            if (enemy.IsChasing())
+                hearbeatSound.Play();
+        }
+        else
+        {
+            currSpeed = walkSpeed;
+            cameraAnim.SetBool("Sprint", false);
+        }
+
+        controller.Move(movement.normalized * currSpeed * Time.deltaTime);
     }
 
     private void TakeObj()
@@ -144,11 +170,9 @@ public class PlayerController : MonoBehaviour
 
                     npc.TakeCoffee(true);
                     isFull = false;
-                    Debug.Log("Hit:" + hit.collider.gameObject.name);
 
                     Destroy(pickUpObj);
                 }
-                else Debug.Log("Can't find NPC");
             }
         }
     }

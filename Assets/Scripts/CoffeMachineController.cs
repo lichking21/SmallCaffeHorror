@@ -28,7 +28,7 @@ public class CoffeMachineController : MonoBehaviour
         }
 
         if (!isPouring)
-        StartCoroutine(StartPouring());
+            StartCoroutine(StartPouring());
     }
 
     public void TrunOn()
