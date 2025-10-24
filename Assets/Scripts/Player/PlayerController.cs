@@ -7,6 +7,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private float runSpeed = 5.5f;
     private float currSpeed;
 
+    [SerializeField] private UIController ui;
     [SerializeField] private AudioSource hearbeatSound;
     private EnemyController enemy;
 
@@ -40,6 +41,8 @@ public class PlayerController : MonoBehaviour
         TurnOnMachine();
         PlaceCap();
         GiveCoffee();
+
+        InteractionHint();
     }
 
     private void Move()
@@ -67,9 +70,11 @@ public class PlayerController : MonoBehaviour
         controller.Move(movement.normalized * currSpeed * Time.deltaTime);
     }
 
+    private bool CameraRaycast(out RaycastHit hit) => Physics.Raycast(cam.transform.position, cam.transform.forward, out hit, rayLength);
+
     private void TakeObj()
     {
-        if (Physics.Raycast(cam.transform.position, cam.transform.forward, out RaycastHit hit, rayLength))
+        if (CameraRaycast(out RaycastHit hit))
         {
             if (hit.collider.CompareTag("PickUpObj"))
             {
@@ -115,7 +120,7 @@ public class PlayerController : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.F))
         {
-            if (Physics.Raycast(cam.transform.position, cam.transform.forward, out RaycastHit hit, rayLength))
+            if (CameraRaycast(out RaycastHit hit))
             {
                 machineController = hit.collider.gameObject.GetComponent<CoffeMachineController>();
 
@@ -139,7 +144,7 @@ public class PlayerController : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.F))
         {
-            if (Physics.Raycast(cam.transform.position, cam.transform.forward, out RaycastHit hit, rayLength))
+            if (CameraRaycast(out RaycastHit hit))
             {
                 var cupController = hit.collider.gameObject.GetComponent<CoffeeCupController>();
 
@@ -162,7 +167,7 @@ public class PlayerController : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.F))
         {
-            if (Physics.Raycast(cam.transform.position, cam.transform.forward, out RaycastHit hit, rayLength))
+            if (CameraRaycast(out RaycastHit hit))
             {
                 if (hit.collider.CompareTag("NPC") && pickUpObj.name == cupName && isFull)
                 {
@@ -175,5 +180,24 @@ public class PlayerController : MonoBehaviour
                 }
             }
         }
+    }
+
+    private void InteractionHint()
+    {
+        if (CameraRaycast(out RaycastHit hit))
+        {
+            if (hit.collider.CompareTag("PickUpObj"))
+                ui.ShowHint("Press E to pick up item");
+            else if (hit.collider.CompareTag("PickUpObj") && hit.collider.gameObject.name == capName && pickUpObj != null)
+                ui.ShowHint("Press F to place item");
+            else if (hit.collider.CompareTag("CoffeeMachine") && pickUpObj != null)
+                ui.ShowHint("Press F to place item");
+            else if (hit.collider.CompareTag("NPC") && pickUpObj != null)
+                ui.ShowHint("Press F to give item");
+            else 
+                ui.HideHint();
+        }
+        else
+            ui.HideHint();
     }
 }
